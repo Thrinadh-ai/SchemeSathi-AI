@@ -200,17 +200,27 @@ Supported providers:
    - (Optional) `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `AI_API_KEY`
 6. Click **Deploy**. Note your live URL: `https://schemesathi-api.onrender.com`.
 
-#### 2. Deploy Frontend on Vercel
-1. Sign in to [Vercel](https://vercel.com/) and click **Add New Project**.
-2. Import your GitHub repository.
+#### Option A: Full-Stack All-in-One Deployment on Vercel
+1. SchemeSathi AI is pre-configured with `pyproject.toml` pointing to `entrypoint = "server:app"`.
+2. Push your repository to GitHub.
+3. Import the repository in [Vercel](https://vercel.com/).
+4. Vercel automatically detects the Python runtime and uses `server:app` as the WSGI entrypoint to serve both the frontend and REST APIs.
+5. In **Project Settings** > **Environment Variables**, add any optional credentials (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `AI_API_KEY`).
+6. Click **Deploy**.
+
+#### Option B: Decoupled (Frontend on Vercel + Backend on Render/Railway)
+1. Push your repository to GitHub.
+2. Sign in to [Render](https://render.com/) and click **New Web Service**.
 3. Configure:
-   - **Framework Preset**: `Other`
-   - **Output Directory**: `.` (Root)
-4. In `index.html`, set the backend URL by adding this script snippet inside `<head>` before `script.js`:
-   ```html
-   <script>window.__SCHEMESATHI_API_URL__ = "https://schemesathi-api.onrender.com";</script>
-   ```
-5. Click **Deploy**. Your frontend is live with automatic SSL!
+   - **Environment**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `gunicorn server:app --bind 0.0.0.0:$PORT`
+4. In **Environment Variables**, add:
+   - `FRONTEND_ORIGIN`: `https://your-frontend.vercel.app`
+   - `PORT`: `10000`
+   - (Optional) `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `AI_API_KEY`
+5. Click **Deploy**. Note your live URL: `https://schemesathi-api.onrender.com`.
+6. On Vercel, deploy the frontend with `window.__SCHEMESATHI_API_URL__` set to your Render URL.
 
 ---
 

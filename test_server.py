@@ -13,12 +13,12 @@ Covers all required test scenarios:
 
 import unittest
 import json
-from server import app, db_manager
+import server
 
 class SchemeSathiTestCase(unittest.TestCase):
     def setUp(self):
-        app.config["TESTING"] = True
-        self.client = app.test_client()
+        server.app.config["TESTING"] = True
+        self.client = server.app.test_client()
 
     def test_health_endpoint(self):
         """Verify GET /api/health returns 200 and healthy status structure."""
